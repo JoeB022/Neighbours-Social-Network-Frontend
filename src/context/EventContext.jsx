@@ -52,13 +52,33 @@ const EventProvider = ({ children }) => {
     localStorage.setItem("events", JSON.stringify(updatedEvents));
   };
 
-  // Delete an event
-  const deleteEvent = (eventId) => {
-    const updatedEvents = events.filter((event) => event.id !== eventId);
-
-    setEvents(updatedEvents);
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
+  const deleteEvent = async (eventId) => {
+    const token = localStorage.getItem("access_token"); // Get the JWT token
+    console.log("JWT Token:", token);
+    try {
+      const response = await fetch(`http://localhost:5000/events/delete/${eventId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}` // Include JWT for authentication
+        },
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        // Update state and localStorage only after successful deletion
+        const updatedEvents = events.filter((event) => event.id !== eventId); // Remove the deleted event from the list
+        setEvents(updatedEvents); // Update context state
+        localStorage.setItem("events", JSON.stringify(updatedEvents)); // Store updated events in localStorage
+        alert("Event deleted successfully!");
+        window.location.reload(); // Refresh event list
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
+  
 
   // Update an event
   const updateEvent = (updatedEvent) => {

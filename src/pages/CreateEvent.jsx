@@ -10,13 +10,23 @@ const CreateEvent = () => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(""); // Stores the date in YYYY-MM-DD format
   const [location, setLocation] = useState("");
+
+  // Function to handle date change and format it to YYYY-MM-DD
+  const handleDateChange = (e) => {
+    const selectedDate = new Date(e.target.value);
+    const formattedDate = selectedDate.toISOString().split("T")[0]; // Converts to YYYY-MM-DD
+    setDate(formattedDate);
+  };
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
+    
+    console.log("User Data:", user); // Debugging
+    console.log("Access Token:", user?.access_token); // Debugging
 
-    if (!user || !user.token) {
+    if (!user || !user.access_token) {
       alert("You must be logged in to create an event!");
       return;
     }
@@ -34,7 +44,7 @@ const CreateEvent = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.access_token}`,
         },
         body: JSON.stringify(eventData),
       });
@@ -74,7 +84,7 @@ const CreateEvent = () => {
         <input
           type="date"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={handleDateChange} // Ensure proper formatting
           required
         />
         <input

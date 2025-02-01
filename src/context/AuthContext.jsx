@@ -13,29 +13,32 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch user data using the stored JWT token
-  const fetchUserProfile = async (token) => {
-    try {
-      const response = await fetch("http://127.0.0.1:5000/protected", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+const fetchUserProfile = async (token) => {
+  try {
+    const response = await fetch("http://127.0.0.1:5000/protected", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        setUser({
-          name: data.message.split(",")[1].trim(), // Extract username
-          token, // Store token
-          id: data.id, // Store user id
-        });
-      } else {
-        logout();
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Fetched User Data:", data); // Debugging
+
+      setUser({
+        id: data.user_id, // Ensure ID matches backend response
+        name: data.name, // Ensure name is correctly stored
+        access_token: token, // Store the correct access token
+      });
+    } else {
+      console.error("Invalid Token");
       logout();
     }
-  };
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    logout();
+  }
+};
+
 
   // Register user (keeps localStorage for now)
   const register = async (name, email, password) => {

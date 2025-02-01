@@ -31,6 +31,7 @@ const Events = () => {
     fetchEvents();
   }, [setEvents]);
 
+
   const handleRSVP = (eventId, status) => {
     if (!user) {
       alert("You must be logged in to RSVP.");
