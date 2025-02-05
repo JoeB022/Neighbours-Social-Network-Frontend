@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Logo or App Name */}
+        {/* App Name */}
         <h1 className="navbar-title">Neighborhood Network</h1>
 
         {/* Navigation Links */}
